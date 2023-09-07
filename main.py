@@ -6,6 +6,7 @@ import cv2
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = { 'png', 'jpg', 'jpeg','webp'}
 app = Flask(__name__)
+app.secret_key = 'super secret key'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def preprocessing(filename, operation):
@@ -14,7 +15,21 @@ def preprocessing(filename, operation):
     match operation:
         case 'cgray':
             process = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            cv2.imwrite(f'static/{filename}', process)
+            newfilename = f'static/{filename}'
+            cv2.imwrite(newfilename, process)
+            return newfilename
+        case 'cpng':
+            newfilename = f'static/{filename.split(".")[0]}.png'
+            cv2.imwrite(newfilename, image)
+            return newfilename
+        case 'cwebp':
+            newfilename = f'static/{filename.split(".")[0]}.webp'
+            cv2.imwrite(newfilename, image)
+            return newfilename
+        case 'cjpg':
+            newfilename = f'static/{filename.split(".")[0]}.jpg'
+            cv2.imwrite(newfilename, image)
+            return newfilename
     
 @app.route("/")
 def hello_world():
@@ -45,7 +60,9 @@ def edit():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            preprocessing(filename, operation)
+            new = preprocessing(filename, operation)
+            
+            flash(f'your image has processed and is available <a href="/{new}" target = "_blank">here</a>')
             return render_template('index.html')
 
 app.run(debug=True)
