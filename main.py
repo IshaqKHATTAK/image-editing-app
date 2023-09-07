@@ -10,7 +10,6 @@ app.secret_key = 'super secret key'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def preprocessing(filename, operation):
-    print(f'the filename is {filename} and the operation is {operation}')
     image = cv2.imread(f'uploads/{filename}')
     match operation:
         case 'cgray':
@@ -32,13 +31,14 @@ def preprocessing(filename, operation):
             return newfilename
     
 @app.route("/")
-def hello_world():
+def home():
     return render_template('index.html')
 
 @app.route("/about")
 def about():
     return render_template('about.html')
 
+#This function checks either the image type exist in the allowed file
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -60,8 +60,8 @@ def edit():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            new = preprocessing(filename, operation)
-            
+            new = preprocessing(filename, operation) #this function return static/name_of_image.png
+
             flash(f'your image has processed and is available <a href="/{new}" target = "_blank">here</a>')
             return render_template('index.html')
 
