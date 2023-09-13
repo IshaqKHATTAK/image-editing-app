@@ -57,6 +57,7 @@
 
   <div class="container my-4">
     <h1 class="fs-3">image editor- edit your image online with image editor</h1>
+    <!-- action = '/edit' make the form to land on edit route -->
     <form action="/edit" method="post" enctype="multipart/form-data">
       <div class="mb-3">
         <label for="formFile" class="form-label">Upload your image</label>
@@ -72,7 +73,7 @@
         </select>
         <label for="floatingSelect">Select editing operation</label>
       </div>
-      <button type="submit" class="btn btn-outline-success btn-lg my-2">Success</button>
+      <button type="submit" class="btn btn-outline-success btn-lg my-2">Submit</button>
     </form>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
